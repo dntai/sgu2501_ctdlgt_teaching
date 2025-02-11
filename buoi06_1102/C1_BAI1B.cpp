@@ -6,7 +6,7 @@ using namespace std;
 #define MAX 10000
 #define FI "C1_BAI1B.INP"
 
-#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
     #define D(x) x
 #else
@@ -16,6 +16,9 @@ using namespace std;
 // Du lieu nhap
 int n;
 int a[MAX];
+
+int cnt[MAX];
+int ans;
 
 void solve()
 {
@@ -31,6 +34,24 @@ void solve()
 	for (int i = 0; i < n; i++)
 		printf("%d ", a[i]);
 	printf("\n");)
+
+	// Xu ly
+	cnt[0] = 1;
+	for (int i = 1; i <= n - 1;i++)
+	{
+		if (a[i] < a[i - 1])
+			cnt[i] = 1;
+		else
+			cnt[i] = cnt[i - 1] + 1;
+	}
+
+	// Tim max
+	ans = 1;
+	for (int i = 0; i < n; i++)
+		if (ans < cnt[i])
+			ans = cnt[i];
+
+	printf("%d\n", ans);
 }
 
 int main()
