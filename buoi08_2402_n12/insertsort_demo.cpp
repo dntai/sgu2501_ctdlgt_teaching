@@ -23,6 +23,39 @@ void insertion_sort(int a[], int n)
     }
 }
 
+bool op_chan_le(int a, int b)
+{
+    bool kq = false;
+    if(a%2==0 && b%2==1)
+        kq = true;
+    return kq;
+}
+
+bool op_giam_dan(int a, int b)
+{
+    return a>b;
+}
+
+void insertion_sort_tq(int a[], int n, bool (*op_less)(int, int))
+{
+    // gia su i=0,..0 la duoc sort
+    // chen gia tri tu vi tri i=1..n-1 vao mang a[0], a[1],...,a[i-1] (da co thu tu)
+    for(int i=1; i<=n-1; i++) {
+        int j = i - 1;
+        int x = a[i];
+        bool cond = true;
+        while((j>=0) && cond){
+            if(op_less(x, a[j])){ // x < a[j] <-> op_less(x, a[j]) == true
+                a[j+1] = a[j];
+                j = j - 1;
+            } else {
+                cond = false;
+            }
+        }
+        a[j+1] = x;
+    }
+}
+
 void insertion_sort_cnt(int a[], int n, int *cnt_sosanh, int *cnt_dichuyen)
 {
     (*cnt_sosanh) = 0;
@@ -86,6 +119,18 @@ void test1()
     printf("\n");
 }
 
+void test4()
+{
+    int a[] = {6, 8, 1, 5, 6, 2, 7, 4}, n = 8;
+    printf("----- TEST 4 -----\n");
+    printf("Mang a: "); xuat_mang(a, n); printf("\n");
+    insertion_sort_tq(a, n, op_chan_le);
+    printf("Mang a (chan/le): "); xuat_mang(a, n); printf("\n");
+    insertion_sort_tq(a, n, op_giam_dan);
+    printf("Mang a (giam dan): "); xuat_mang(a, n); printf("\n");
+    printf("\n");
+}
+
 void test2()
 {
     int a[] = {6, 8, 1, 5, 6, 2, 7, 4}, n = 8;
@@ -119,6 +164,7 @@ int main()
     printf("--- INSERT SORT --- \n");
     // test1();
     // test2();
-    test3();
+    // test3();
+    test4();
     return 0;
 }
