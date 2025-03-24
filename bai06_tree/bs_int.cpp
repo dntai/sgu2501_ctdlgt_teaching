@@ -101,12 +101,13 @@ void insertNonRecursive(BSTREE& t, int x)
 		bool moving_left = false;
 		Node* parent = NULL;
 		while (p!= NULL && !found) {
-			parent = p;
 			if (p->info > x)
 			{
+				parent = p;
 				p = p->left;
 				moving_left = true;
 			} else if(p->info < x){ 
+				parent = p;
 				p = p->right;
 				moving_left = false;
 			}
@@ -149,6 +150,75 @@ Node* findNonRecursive(BSTREE& t, int x) {
 			found = true;
 	}
 	return p;
+}
+
+void deleteNonRecursive(BSTREE& t, int x) {
+	Node * p = t;
+	Node* parent_p = NULL;
+	bool found = false;
+	bool moving_left = true;
+	while (p != NULL && !found) {
+		if (p->info < x) {
+			parent_p = p;
+			p = p->right;
+			moving_left = false;
+		}
+		else if (p->info > x) {
+			parent_p = p;
+			p = p->left;
+			moving_left = true;
+		}
+		else
+			found = true;
+	}
+	if (found) {
+		// p la nut la
+		if (p->left == NULL && p->right == NULL) {
+			if (p == t)
+				t = NULL;
+			else if (moving_left)
+				parent_p->left = NULL;
+			else
+				parent_p->right = NULL;
+			delete p;
+		}
+		else if (p->right == NULL) { // co con trai
+			if (p == t)
+				t = p->left;
+			else if (moving_left)
+				parent_p->left = p->left;
+			else
+				parent_p->right = p->left;
+			delete p;
+		}
+		else if (p->left == NULL) { // co con phai
+			if (p == t)
+				t = p->right;
+			else if (moving_left)
+				parent_p->left = p->right;
+			else
+				parent_p->right = p->right;
+			delete p;
+		}
+		else { // co 2 con
+			Node* q = p->right;
+			Node* parent_q = NULL;
+			while (q->left != NULL) {
+				parent_q = q;
+				q = q->left;
+			}
+			// sao chep noi dung
+			p->info = q->info;
+			p->count = q->count;
+			// dieu chinh tham chieu
+			if (q == p->right)
+				p->right = q->right;
+			else
+				parent_q->left = q->right;
+			// huy q
+			delete q;
+		}
+	}
 }
 
 void test1()
@@ -213,9 +283,45 @@ void test2()
 	destroyTree(tree);
 }
 
+void test3()
+{
+	printf("---TEST3---\n");
+
+	int a[] = { 64, 37, 10, 6, 0, 0, 0, 57, 0, 0, 78, 69, 67, 0, 0, 0, 82, 0, 93 }, n, i;
+	n = sizeof(a) / sizeof(int);
+	int x;
+
+	BSTREE tree;
+	init(tree);
+
+	i = 0; createTree(tree, a, n, i);
+	
+	printf("Tree: \n");
+	inOrder(tree, 0);
+	printf("\n");
+
+	x = 78; printf("Xoa nut {%d}: \n", x);
+	deleteNonRecursive(tree, x);
+	inOrder(tree, 0);
+	printf("\n");
+
+	x = 10; printf("Xoa nut {%d}: \n", x);
+	deleteNonRecursive(tree, x);
+	inOrder(tree, 0);
+	printf("\n");
+
+	x = 64; printf("Xoa nut {%d}: \n", x);
+	deleteNonRecursive(tree, x);
+	inOrder(tree, 0);
+	printf("\n");
+
+	destroyTree(tree);
+}
+
 int main()
 {
-	test1();
-	test2();
+	// test1();
+	// test2();
+	test3();
 	return 0;
 }
