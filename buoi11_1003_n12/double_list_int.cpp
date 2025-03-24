@@ -142,7 +142,7 @@ void test1()
 
     ClearList(lista1);
     init(lista1);
-    lista1 = make_data(a1, n);
+    lista1 = make_data(a1, n1);
     printf("Danh sach a2: "); ShowList(lista1);printf("\n");
     insertOrder(lista1, 10);
     printf("--> Danh sach a2: "); ShowList(lista1);printf("\n");
